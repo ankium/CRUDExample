@@ -40,6 +40,8 @@ namespace Services
                 _persons.Add(new Person() { PersonID = Guid.Parse("6717C42D-16EC-4F15-80D8-4C7413E250CB"), PersonName = "Seumas", Email = "ssimonitto8@biglobe.ne.jp", DateOfBirth = DateTime.Parse("1999-02-02"), Gender = "Male", Address = "76779 Norway Maple Crossing", ReceiveNewsLetters = false, CountryID = Guid.Parse("80DF255C-EFE7-49E5-A7F9-C35D7C701CAB") });
 
                 _persons.Add(new Person() { PersonID = Guid.Parse("6E789C86-C8A6-4F18-821C-2ABDB2E95982"), PersonName = "Freemon", Email = "faugustin9@vimeo.com", DateOfBirth = DateTime.Parse("1996-04-27"), Gender = "Male", Address = "8754 Becker Street", ReceiveNewsLetters = false, CountryID = Guid.Parse("80DF255C-EFE7-49E5-A7F9-C35D7C701CAB") });
+
+                _persons.Add(new Person() { PersonID = Guid.Parse("7A817066-4E8F-43AA-A7EE-3B7B57FC783A"), PersonName = "Wangming", Email = "Wangming@qq.com", DateOfBirth = DateTime.Parse("1998-03-12"), Gender = "Male", Address = "8754 Nanjin Street", ReceiveNewsLetters = false, CountryID = Guid.Parse("C7FB9E7F-1C44-4E78-9E0E-1BEBED7A65A4") });
             }
         }
 
@@ -76,7 +78,7 @@ namespace Services
 
         public List<PersonResponse> GetAllPersons()
         {
-            return _persons.Select(temp=> ConvertPersonToPersonResponse(temp)).ToList();
+            return _persons.Select(temp => ConvertPersonToPersonResponse(temp)).ToList();
         }
 
         public PersonResponse? GetPersonByPersonID(Guid? personID)
@@ -92,7 +94,7 @@ namespace Services
             List<PersonResponse> allPersons = GetAllPersons();
             List<PersonResponse> matchingPersons = allPersons;
 
-            if(string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString))
+            if (string.IsNullOrEmpty(searchBy) || string.IsNullOrEmpty(searchString))
             {
                 return matchingPersons;
             }
@@ -106,7 +108,7 @@ namespace Services
                     matchingPersons = allPersons.Where(temp => !string.IsNullOrEmpty(temp.Email) ? temp.Email.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList();
                     break;
                 case nameof(PersonResponse.DateOfBirth):
-                    matchingPersons = allPersons.Where(temp => temp.DateOfBirth!=null ? temp.DateOfBirth.Value.ToString("dd MMMM yyyy").Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList();
+                    matchingPersons = allPersons.Where(temp => temp.DateOfBirth != null ? temp.DateOfBirth.Value.ToString("dd MMMM yyyy").Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList();
                     break;
                 case nameof(PersonResponse.Gender):
                     matchingPersons = allPersons.Where(temp => !string.IsNullOrEmpty(temp.Gender) ? temp.Gender.Contains(searchString, StringComparison.OrdinalIgnoreCase) : true).ToList();
@@ -124,14 +126,14 @@ namespace Services
 
         public List<PersonResponse> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderOptions sortOrder)
         {
-            if(string.IsNullOrEmpty(sortBy))
+            if (string.IsNullOrEmpty(sortBy))
             {
                 return allPersons;
             }
             List<PersonResponse> sortedPersons = (sortBy, sortOrder) switch
             {
-                (nameof(PersonResponse.PersonName), SortOrderOptions.ASC) => allPersons.OrderBy(temp => temp.PersonName,StringComparer.OrdinalIgnoreCase).ToList(),
-                (nameof(PersonResponse.PersonName), SortOrderOptions.DESC) => allPersons.OrderByDescending(temp => temp.PersonName,StringComparer.OrdinalIgnoreCase).ToList(),
+                (nameof(PersonResponse.PersonName), SortOrderOptions.ASC) => allPersons.OrderBy(temp => temp.PersonName, StringComparer.OrdinalIgnoreCase).ToList(),
+                (nameof(PersonResponse.PersonName), SortOrderOptions.DESC) => allPersons.OrderByDescending(temp => temp.PersonName, StringComparer.OrdinalIgnoreCase).ToList(),
 
                 (nameof(PersonResponse.Email), SortOrderOptions.ASC) => allPersons.OrderBy(temp => temp.Email, StringComparer.OrdinalIgnoreCase).ToList(),
                 (nameof(PersonResponse.Email), SortOrderOptions.DESC) => allPersons.OrderByDescending(temp => temp.Email, StringComparer.OrdinalIgnoreCase).ToList(),
@@ -188,7 +190,7 @@ namespace Services
 
         public bool DeletePerson(Guid? personID)
         {
-            if(personID == null)
+            if (personID == null)
             {
                 throw new ArgumentNullException(nameof(personID));
             }
