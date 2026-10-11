@@ -9,16 +9,18 @@ namespace CRUDExample.Controllers
     {
         // Private field
         private readonly IPersonsService _personsService;
-        
+        private readonly ICountriesService _countriesService;
+
         // Constructor
-        public PersonsController(IPersonsService personsService)
+        public PersonsController(IPersonsService personsService, ICountriesService countriesService)
         {
             _personsService = personsService;
+            _countriesService = countriesService;
         }
-        
+
         [Route("persons/index")]
         [Route("/")]
-        public IActionResult Index(string searchBy,string? searchString,string sortBy = nameof(PersonResponse.PersonName),SortOrderOptions sortOrder = SortOrderOptions.ASC)
+        public IActionResult Index(string searchBy, string? searchString, string sortBy = nameof(PersonResponse.PersonName), SortOrderOptions sortOrder = SortOrderOptions.ASC)
         {
 
             //Search
@@ -41,6 +43,36 @@ namespace CRUDExample.Controllers
             ViewBag.CurrentSortBy = sortBy;
             ViewBag.CurrentSortOrder = sortOrder.ToString();
             return View(sortedPersons); //Views/Persons/Index.cshtml
+        }
+
+        // Executes when the user clicks on "Create Person" hyperlink (while opening the create view)
+        [Route("persons/create")]
+        [HttpGet]
+        public IActionResult Create()
+        {
+            List<CountryResponse> countries = _countriesService.GetAllCountries();
+            ViewBag.Countries = countries;
+            return View();
+        }
+
+        [Route("persons/create")]
+        [HttpPost]
+        public IActionResult Create(PersonAddRequest personAddRequest)
+        {
+            if (!ModelState.IsValid)
+            {
+                List<CountryResponse> countries = _countriesService.GetAllCountries();
+                ViewBag.Countries = countries;
+
+                ViewBag.Errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                return View();
+            }
+
+            // Call the service method
+            PersonResponse personResponse = _personsService.AddPerson(personAddRequest);
+
+            // Navigate to Index action method (it makes another request to "persons/index")
+            return RedirectToAction("Index", "Persons");
         }
     }
 }

@@ -81,7 +81,7 @@ namespace ServiceContracts.DTO
                 Address = person.Address,
                 CountryID = person.CountryID,
                 Gender = person.Gender,
-                Age= person.DateOfBirth.HasValue ? Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25, 2) : null
+                Age= person.DateOfBirth.HasValue ? Math.Round((DateTime.Now - person.DateOfBirth.Value).TotalDays / 365.25) : null
             };
             return personResponse;
         }
