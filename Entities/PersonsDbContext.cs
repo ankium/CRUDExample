@@ -7,6 +7,9 @@ namespace Entities
 {
     public class PersonsDbContext : DbContext
     {
+        public PersonsDbContext(DbContextOptions options)
+            : base(options) { }
+
         public DbSet<Person> Persons { get; set; }
         public DbSet<Country> Countries { get; set; }
 
@@ -17,7 +20,7 @@ namespace Entities
             modelBuilder.Entity<Person>().ToTable("Persons");
 
             // Seed data for Countries
-            string countriesJson = System.IO.File.ReadAllText("~/json/countries.json");
+            string countriesJson = System.IO.File.ReadAllText("countries.json");
             List<Country> countries = System.Text.Json.JsonSerializer.Deserialize<List<Country>>(countriesJson);
 
             foreach (Country country in countries)
@@ -26,7 +29,7 @@ namespace Entities
             }
 
             // Seed data for Persons
-            string personsJson = System.IO.File.ReadAllText("~/json/persons.json");
+            string personsJson = System.IO.File.ReadAllText("persons.json");
             List<Person> persons = System.Text.Json.JsonSerializer.Deserialize<List<Person>>(personsJson);
 
             foreach (Person person in persons)
