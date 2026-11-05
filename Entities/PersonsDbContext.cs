@@ -37,5 +37,12 @@ namespace Entities
                 modelBuilder.Entity<Person>().HasData(person);
             }
         }
+
+        public List<Person> sp_GetAllPersons()
+        {
+            // Execute the stored procedure to get all persons
+            List<Person> persons = this.Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPersons]").ToList();
+            return persons;
+        }
     }
 }

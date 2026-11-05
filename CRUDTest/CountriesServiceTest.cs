@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using Services;
@@ -15,7 +16,7 @@ namespace CRUDTest
         // Constructor to initialize the CountriesService instance
         public CountriesServiceTest()
         {
-            _countriesService = new CountriesService(false);
+            _countriesService = new CountriesService(new PersonsDbContext(new DbContextOptionsBuilder<PersonsDbContext>().Options));
         }
 
         #region AddCountry Tests

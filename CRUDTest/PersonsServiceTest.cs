@@ -8,6 +8,7 @@ using Xunit;
 using ServiceContracts.Enums;
 using Entities;
 using Xunit.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CRUDTest
 {
@@ -22,8 +23,8 @@ namespace CRUDTest
         public PersonsServiceTest(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
-            _personsService = new PersonsService(false);
-            _countriesService = new CountriesService(false);
+            _countriesService = new CountriesService(new PersonsDbContext(new DbContextOptionsBuilder<PersonsDbContext>().Options));
+            _personsService = new PersonsService(new PersonsDbContext(new DbContextOptionsBuilder<PersonsDbContext>().Options), _countriesService);
         }
 
         #region AddPerson
@@ -545,7 +546,7 @@ namespace CRUDTest
 
             // Assert
             Assert.Equal(person_response_from_get, person_response_from_update);
-        
+
         }
 
         #endregion
