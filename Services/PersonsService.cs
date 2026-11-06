@@ -47,8 +47,9 @@ namespace Services
             person.PersonID = Guid.NewGuid();
 
             // add person to the list
-            _db.Persons.Add(person);// Entity State:Added
-            _db.SaveChanges();
+            //_db.Persons.Add(person);// Entity State:Added
+            //_db.SaveChanges();
+            _db.sp_InsertPerson(person);
 
             // convert Person to PersonResponse
             return ConvertPersonToPersonResponse(person);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace Entities
@@ -43,6 +44,25 @@ namespace Entities
             // Execute the stored procedure to get all persons
             List<Person> persons = this.Persons.FromSqlRaw("EXECUTE [dbo].[GetAllPersons]").ToList();
             return persons;
+        }
+
+        public int sp_InsertPerson(Person person)
+        {
+            SqlParameter[] parameters = new SqlParameter[]
+            {
+                new SqlParameter("@PersonID", person.PersonID),
+                new SqlParameter("@PersonName", person.PersonName),
+                new SqlParameter("@Email", person.Email),
+                new SqlParameter("@DateOfBirth", person.DateOfBirth),
+                new SqlParameter("@Gender", person.Gender),
+                new SqlParameter("@CountryID", person.CountryID),
+                new SqlParameter("@Address", person.Address),
+                new SqlParameter("@ReceiveNewsLetters", person.ReceiveNewsLetters)
+            };
+            // Execute the stored procedure to insert a person
+            int result = this.Database.ExecuteSqlRaw(
+                "EXECUTE [dbo].[InsertPerson] @PersonID, @PersonName, @Email, @DateOfBirth, @Gender, @CountryID, @Address, @ReceiveNewsLetters", parameters);
+            return result;
         }
     }
 }
