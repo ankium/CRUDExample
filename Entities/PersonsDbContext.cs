@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 
 namespace Entities
 {
@@ -37,6 +38,13 @@ namespace Entities
             {
                 modelBuilder.Entity<Person>().HasData(person);
             }
+
+            modelBuilder.Entity<Person>().Property(temp => temp.TIN)
+                .HasColumnName("TaxIdentificationNumber")
+                .HasColumnType("varchar(8)")
+                .HasDefaultValue("ABC12345");
+
+            modelBuilder.Entity<Person>().HasCheckConstraint("CHK_TIN", "LEN(TaxIdentificationNumber) = 8");
         }
 
         public List<Person> sp_GetAllPersons()

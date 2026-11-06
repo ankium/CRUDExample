@@ -95,11 +95,17 @@ namespace Entities.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("TIN")
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("varchar(8)")
+                        .HasDefaultValue("ABC12345")
+                        .HasColumnName("TaxIdentificationNumber");
 
                     b.HasKey("PersonID");
 
-                    b.ToTable("Persons", (string)null);
+                    b.ToTable("Persons", null, t =>
+                        {
+                            t.HasCheckConstraint("CHK_TIN", "LEN(TaxIdentificationNumber) = 8");
+                        });
 
                     b.HasData(
                         new
