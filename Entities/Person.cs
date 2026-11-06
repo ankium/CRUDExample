@@ -37,5 +37,8 @@ namespace Entities
 
         // Indicates whether the person wants to receive newsletters
         public bool ReceiveNewsLetters { get; set; }
+
+        // Max length of 20 characters for TIN
+        public string? TIN { get; set; } 
     }
 }
