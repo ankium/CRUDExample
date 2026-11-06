@@ -39,12 +39,19 @@ namespace Entities
                 modelBuilder.Entity<Person>().HasData(person);
             }
 
+            // Fluent API
             modelBuilder.Entity<Person>().Property(temp => temp.TIN)
                 .HasColumnName("TaxIdentificationNumber")
                 .HasColumnType("varchar(8)")
                 .HasDefaultValue("ABC12345");
 
             modelBuilder.Entity<Person>().HasCheckConstraint("CHK_TIN", "LEN(TaxIdentificationNumber) = 8");
+
+            //modelBuilder.Entity<Person>(entity => { 
+            //    entity.HasOne<Country>(c => c.Country)
+            //    .WithMany(p => p.Persons)
+            //    .HasForeignKey(p => p.CountryID); 
+            //});
         }
 
         public List<Person> sp_GetAllPersons()
