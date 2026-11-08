@@ -1,4 +1,5 @@
 ﻿using ServiceContracts.DTO;
+using System.Threading.Tasks;
 
 namespace ServiceContracts
 {
@@ -12,20 +13,20 @@ namespace ServiceContracts
         /// </summary>
         /// <param name="countryAddRequest">Country object to add</param>
         /// <returns>Returns the country object after adding it (including newly generated country id)</returns>
-        CountryResponse AddCountry(CountryAddRequest? countryAddRequest);
+        Task<CountryResponse> AddCountry(CountryAddRequest? countryAddRequest);
 
         /// <summary>
         /// Returns all countries from the list of countries. This method retrieves a list of all country records currently stored in the system. It returns a list of CountryResponse objects, each representing a country with its unique identifier and name.
         /// </summary>
         /// <returns></returns>
-        List<CountryResponse> GetAllCountries();
+        Task<List<CountryResponse>> GetAllCountries();
 
         /// <summary>
         /// Returns a country object from the list of countries based on the provided country ID. 
         /// </summary>
         /// <param name="countryID">This method takes a nullable Guid parameter representing the unique identifier of the country to retrieve.</param>
         /// <returns>If a country with the specified ID exists, it returns a CountryResponse object representing that country; otherwise, it returns null.</returns>
-        CountryResponse? GetCountryByCountryID(Guid? countryID);
+        Task<CountryResponse?> GetCountryByCountryID(Guid? countryID);
 
     }
 }
