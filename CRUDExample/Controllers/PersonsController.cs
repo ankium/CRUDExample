@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
+using Rotativa.AspNetCore;
 
 namespace CRUDExample.Controllers
 {
@@ -160,6 +161,19 @@ namespace CRUDExample.Controllers
             }
             await _personsService.DeletePerson(personUpdateRequest.PersonID);
             return RedirectToAction("Index", "Persons");
+        }
+
+        [Route("[action]")]
+        public async Task<IActionResult> ExportToPDF()
+        {
+            List<PersonResponse> persons = await _personsService.GetAllPersons();
+            return new ViewAsPdf("ExportToPDF", persons,ViewData)
+            {
+                FileName = "Persons.pdf",
+                PageMargins = new Rotativa.AspNetCore.Options.Margins(10, 10, 10, 10),
+                PageOrientation = Rotativa.AspNetCore.Options.Orientation.Landscape,
+                PageSize = Rotativa.AspNetCore.Options.Size.A4
+            };
         }
     }
 }
