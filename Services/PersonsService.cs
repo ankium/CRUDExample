@@ -8,6 +8,10 @@ using Services.Helpers;
 using ServiceContracts.Enums;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using System.IO;
+using CsvHelper;
+using System.Globalization;
+using CsvHelper.Configuration;
 
 namespace Services
 {
@@ -188,6 +192,19 @@ namespace Services
             _db.Persons.Remove(matchingPerson);//Entity State:Deleted
             await _db.SaveChangesAsync();
             return true;
+        }
+
+        public async Task<MemoryStream> GetPersonsCSV()
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            StreamWriter streamWriter = new StreamWriter(memoryStream);
+            CsvWriter csvWriter = new CsvWriter(streamWriter,CultureInfo.InvariantCulture,true);
+            csvWriter.WriteHeader<PersonResponse>();
+            csvWriter.NextRecord();
+            List<PersonResponse> allPersons = _db.Persons.Include("Country").Select(temp => temp.ToPersonResponse()).ToList();
+            await csvWriter.WriteRecordsAsync(allPersons);
+            memoryStream.Position = 0;
+            return memoryStream;
         }
     }
 }
