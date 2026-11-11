@@ -2,7 +2,10 @@
 @{
     Layout = null;
 }
-<link rel="stylesheet" href="@("http://" + Context.Request.Host.ToString() + "/StyleSheet.css")" />
+
+@*在 Rotativa 中引用 CSS 文件时，需要在 <link> 标签中构造完整的绝对 URL*@
+@* <link rel="stylesheet" href="@("http://" + Context.Request.Host.ToString() + "/StyleSheet.css")" /> *@
+<link href="@($"{Context.Request.Scheme}://{Context.Request.Host}/Stylesheet.css")" rel="stylesheet" />
 
 <h1>Persons</h1>
 

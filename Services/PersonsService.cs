@@ -12,6 +12,7 @@ using System.IO;
 using CsvHelper;
 using System.Globalization;
 using CsvHelper.Configuration;
+using OfficeOpenXml;
 
 namespace Services
 {
@@ -238,6 +239,62 @@ namespace Services
                 csvWriter.Flush();
             }
 
+            memoryStream.Position = 0;
+            return memoryStream;
+        }
+
+        public async Task<MemoryStream> GetPersonsExcel()
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            // Set the Non-commercial license context for EPPlus
+            ExcelPackage.License.SetNonCommercialPersonal("ankium");
+            using (ExcelPackage excelPackage = new ExcelPackage(memoryStream))
+            {
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Add("Persons");
+                // Add header row
+                worksheet.Cells[1, 1].Value = nameof(PersonResponse.PersonName);
+                worksheet.Cells[1, 2].Value = nameof(PersonResponse.Email);
+                worksheet.Cells[1, 3].Value = nameof(PersonResponse.DateOfBirth);
+                worksheet.Cells[1, 4].Value = nameof(PersonResponse.Age);
+                worksheet.Cells[1, 5].Value = nameof(PersonResponse.Gender);
+                worksheet.Cells[1, 6].Value = nameof(PersonResponse.Country);
+                worksheet.Cells[1, 7].Value = nameof(PersonResponse.Address);
+                worksheet.Cells[1, 8].Value = nameof(PersonResponse.ReceiveNewsLetters);
+                // Apply formatting to header row
+                using (ExcelRange headerCells = worksheet.Cells[1, 1, 1, 8])
+                {
+                    headerCells.Style.Font.Bold = true;
+                    headerCells.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
+                    headerCells.Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+                }
+                // Add data rows
+                List<PersonResponse> allPersons = _db.Persons.Include("Country").Select(temp => temp.ToPersonResponse()).ToList();
+                int rowIndex = 2;
+                foreach (PersonResponse person in allPersons)
+                {
+                    worksheet.Cells[rowIndex, 1].Value = person.PersonName;
+                    worksheet.Cells[rowIndex, 2].Value = person.Email;
+                    if (person.DateOfBirth.HasValue)
+                    {
+                        worksheet.Cells[rowIndex, 3].Value = person.DateOfBirth.Value.ToString("yyyy-MM-dd");
+                    }
+                    else
+                    {
+                        worksheet.Cells[rowIndex, 3].Value = string.Empty;
+                    }
+                    worksheet.Cells[rowIndex, 4].Value = person.Age;
+                    worksheet.Cells[rowIndex, 5].Value = person.Gender;
+                    worksheet.Cells[rowIndex, 6].Value = person.Country;
+                    worksheet.Cells[rowIndex, 7].Value = person.Address;
+                    worksheet.Cells[rowIndex, 8].Value = person.ReceiveNewsLetters;
+                    rowIndex++;
+                }
+                // Auto-fit columns for better visibility
+                worksheet.Cells[worksheet.Dimension.Address].AutoFitColumns();
+                // Save the Excel package to the memory stream
+                await excelPackage.SaveAsync();
+            }
+            // Reset the position of the memory stream to the beginning
             memoryStream.Position = 0;
             return memoryStream;
         }
