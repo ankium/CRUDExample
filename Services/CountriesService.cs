@@ -2,6 +2,8 @@
 using ServiceContracts.DTO;
 using Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using OfficeOpenXml;
 
 namespace Services
 {
@@ -71,6 +73,38 @@ namespace Services
             {
                 return country_response_from_list.ToCountryResponse();
             }
+        }
+
+        public async Task<int> UploadCountriesFromExcelFile(IFormFile file)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+            int countriesAddedCount = 0;
+
+            // Set the Non-commercial license context for EPPlus
+            ExcelPackage.License.SetNonCommercialPersonal("ankium");
+            using (ExcelPackage excelPackage = new ExcelPackage(memoryStream))
+            {
+                ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets[0];
+                int rowCount = worksheet.Dimension.Rows;
+                for (int row = 2; row <= rowCount; row++)
+                {
+                    string countryName = worksheet.Cells[row, 1].Value?.ToString()?.Trim() ?? string.Empty;
+                    if (!string.IsNullOrWhiteSpace(countryName) &&
+                        !_db.Countries.ToList().Any(temp => string.Equals(temp.CountryName, countryName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        Country country = new Country
+                        {
+                            //CountryID = Guid.NewGuid(),
+                            CountryName = countryName
+                        };
+                        _db.Countries.Add(country);
+                        await _db.SaveChangesAsync();
+                        countriesAddedCount++;
+                    }
+                }
+            }
+            return countriesAddedCount;
         }
     }
 }
