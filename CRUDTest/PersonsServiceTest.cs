@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Entities;
+using EntityFrameworkCoreMock;
+using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
-using Services;
-using Xunit;
 using ServiceContracts.Enums;
-using Entities;
-using Xunit.Abstractions;
-using Microsoft.EntityFrameworkCore;
+using Services;
+using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
+using Xunit;
+using Xunit.Abstractions;
 
 namespace CRUDTest
 {
@@ -23,9 +24,23 @@ namespace CRUDTest
         // constructor
         public PersonsServiceTest(ITestOutputHelper testOutputHelper)
         {
+            // Create a mock DbContext using EntityFrameworkCoreMock
+            DbContextMock<ApplicationDbContext> dbContextMock = new DbContextMock<ApplicationDbContext>(new DbContextOptionsBuilder<ApplicationDbContext>().Options);
+
+            // Create a mock DbSet for Countries
+            var countriesInitialData = new List<Country>() { };
+            var personsInitialData = new List<Person>() { };
+            dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesInitialData);
+            dbContextMock.CreateDbSetMock(temp => temp.Persons, personsInitialData);
+
+            // Get the mock DbContext object from the DbContextMock
+            ApplicationDbContext dbContext = dbContextMock.Object;
+
+            // Use the mock DbContext to create instances of CountriesService and PersonsService
+            _countriesService = new CountriesService(dbContext);
+            _personsService = new PersonsService(dbContext, _countriesService);
+
             _testOutputHelper = testOutputHelper;
-            _countriesService = new CountriesService(new PersonsDbContext(new DbContextOptionsBuilder<PersonsDbContext>().Options));
-            _personsService = new PersonsService(new PersonsDbContext(new DbContextOptionsBuilder<PersonsDbContext>().Options), _countriesService);
         }
 
         #region AddPerson

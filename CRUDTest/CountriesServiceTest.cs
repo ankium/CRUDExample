@@ -7,6 +7,8 @@ using ServiceContracts;
 using ServiceContracts.DTO;
 using Services;
 using System.Threading.Tasks;
+using EntityFrameworkCoreMock;
+using Moq;
 
 namespace CRUDTest
 {
@@ -17,7 +19,18 @@ namespace CRUDTest
         // Constructor to initialize the CountriesService instance
         public CountriesServiceTest()
         {
-            _countriesService = new CountriesService(new PersonsDbContext(new DbContextOptionsBuilder<PersonsDbContext>().Options));
+            // Create a mock DbContext using EntityFrameworkCoreMock
+            DbContextMock<ApplicationDbContext> dbContextMock = new DbContextMock<ApplicationDbContext>(new DbContextOptionsBuilder<ApplicationDbContext>().Options);
+
+            // Create a mock DbSet for Countries
+            var countriesInitialData = new List<Country>() { };
+            dbContextMock.CreateDbSetMock(temp => temp.Countries, countriesInitialData);
+
+            // Get the mock DbContext object from the DbContextMock
+            ApplicationDbContext dbContext = dbContextMock.Object;
+
+            // Use the mock DbContext to create an instance of CountriesService
+            _countriesService = new CountriesService(dbContext);
         }
 
         #region AddCountry Tests
