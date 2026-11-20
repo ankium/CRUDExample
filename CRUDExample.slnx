@@ -2,7 +2,7 @@
   <Project Path="CRUDExample/CRUDExample.csproj" />
   <Project Path="CRUDTest/CRUDTest.csproj" Id="bae0c59e-3db4-4731-bb4a-84b5721c2bfa" />
   <Project Path="Entities/Entities.csproj" Id="f714a473-e39c-4dd3-822c-77dd80565003" />
-  <Project Path="Repository/Repository.csproj" Id="ba7ae452-4996-4e7d-988e-bf49b22857d1" />
+  <Project Path="Repository/Repositories.csproj" Id="ba7ae452-4996-4e7d-988e-bf49b22857d1" />
   <Project Path="RepositoryContracts/RepositoryContracts.csproj" Id="a39dab46-9c52-4d2b-b7e4-20893df9192d" />
   <Project Path="ServiceContracts/ServiceContracts.csproj" Id="a33e2378-4cb9-4bf8-8ab1-e810ee37029a" />
   <Project Path="Services/Services.csproj" Id="19f0652e-3a28-4491-97e5-6418c5743034" />

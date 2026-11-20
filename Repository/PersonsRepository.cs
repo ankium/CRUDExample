@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Entities;
 using System.Linq.Expressions;
 
-namespace Repository
+namespace Repositories
 {
     public class PersonsRepository:IPersonsRepository
     {

@@ -31,7 +31,7 @@ namespace CRUDTest
             ApplicationDbContext dbContext = dbContextMock.Object;
 
             // Use the mock DbContext to create an instance of CountriesService
-            _countriesService = new CountriesService(dbContext);
+            _countriesService = new CountriesService(null);
         }
 
         #region AddCountry Tests

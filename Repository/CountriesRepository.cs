@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Entities;
 
-namespace Repository
+namespace Repositories
 {
     public class CountriesRepository:ICountriesRepository
     {
