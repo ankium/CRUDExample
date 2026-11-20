@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace Repositories
 {
-    public class PersonsRepository:IPersonsRepository
+    public class PersonsRepository : IPersonsRepository
     {
         private readonly ApplicationDbContext _db;
         public PersonsRepository(ApplicationDbContext db)
@@ -47,7 +47,7 @@ namespace Repositories
         public async Task<Person> UpdatePerson(Person person)
         {
             Person? matchPerson = await _db.Persons.FirstOrDefaultAsync(temp => temp.PersonID == person.PersonID);
-            if (matchPerson==null)
+            if (matchPerson == null)
             {
                 return person;
             }
