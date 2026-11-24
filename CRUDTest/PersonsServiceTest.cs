@@ -1,15 +1,8 @@
 ﻿using Entities;
-using EntityFrameworkCoreMock;
-using Microsoft.EntityFrameworkCore;
 using ServiceContracts;
 using ServiceContracts.DTO;
 using ServiceContracts.Enums;
 using Services;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
 using Xunit.Abstractions;
 using AutoFixture;
 using FluentAssertions;
@@ -299,7 +292,7 @@ namespace CRUDTest
 
         #region GetSortedPersons
         [Fact]
-        public async Task GetSortedPersons()
+        public async Task GetSortedPersons_WhenCalled_ReturnsSortedPersons()
         {
             //Arrange
             List<Person> persons = new List<Person>()
