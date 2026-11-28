@@ -14,6 +14,7 @@ using System.Globalization;
 using CsvHelper.Configuration;
 using OfficeOpenXml;
 using RepositoryContracts;
+using Microsoft.Extensions.Logging;
 
 namespace Services
 {
@@ -21,10 +22,12 @@ namespace Services
     {
         // private fields
         private readonly IPersonsRepository _personsRepository;
+        private readonly ILogger<PersonsService> _logger;
         // constructor
-        public PersonsService(IPersonsRepository personsRepository)
+        public PersonsService(IPersonsRepository personsRepository, ILogger<PersonsService> logger)
         {
             _personsRepository = personsRepository;
+            _logger = logger;
         }
 
         public async Task<PersonResponse> AddPerson(PersonAddRequest? personAddRequest)
@@ -53,6 +56,7 @@ namespace Services
 
         public async Task<List<PersonResponse>> GetAllPersons()
         {
+            _logger.LogInformation("GetAllPersons method of PersonsService invoked");
             var persons = await _personsRepository.GetAllPersons();
             return persons.Select(temp => temp.ToPersonResponse()).ToList();
         }
@@ -67,6 +71,7 @@ namespace Services
 
         public async Task<List<PersonResponse>> GetFilteredPersons(string searchBy, string? searchString)
         {
+            _logger.LogInformation("GetFilteredPersons method of PersonsService invoked");
             List<Person> persons = searchBy switch
             {
                 nameof(PersonResponse.PersonName) => await _personsRepository.GetFilteredPersons(temp=>temp.PersonName.Contains(searchString)),
@@ -89,6 +94,7 @@ namespace Services
 
         public async Task<List<PersonResponse>> GetSortedPersons(List<PersonResponse> allPersons, string sortBy, SortOrderOptions sortOrder)
         {
+            _logger.LogInformation("GetSortedPersons method of PersonsService invoked");
             if (string.IsNullOrEmpty(sortBy))
             {
                 return allPersons;

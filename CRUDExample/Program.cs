@@ -34,12 +34,6 @@ if (app.Environment.IsDevelopment())
     app.UseDeveloperExceptionPage();
 }
 
-app.Logger.LogTrace("This is a trace message");
-app.Logger.LogDebug("This is a debug message");
-app.Logger.LogInformation("This is an info message");
-app.Logger.LogWarning("This is a warning message");
-app.Logger.LogError("This is an error message");
-app.Logger.LogCritical("This is a critical message");
 
 if (builder.Environment.IsEnvironment("Test") == false)
 {
