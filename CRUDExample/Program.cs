@@ -6,6 +6,12 @@ using RepositoryContracts;
 using Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+builder.Logging.AddDebug();
+
 builder.Services.AddControllersWithViews();
 
 // Use dependency injection to register services and repositories
@@ -27,6 +33,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+
+app.Logger.LogTrace("This is a trace message");
+app.Logger.LogDebug("This is a debug message");
+app.Logger.LogInformation("This is an info message");
+app.Logger.LogWarning("This is a warning message");
+app.Logger.LogError("This is an error message");
+app.Logger.LogCritical("This is a critical message");
 
 if (builder.Environment.IsEnvironment("Test") == false)
 {
